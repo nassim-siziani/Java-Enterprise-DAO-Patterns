@@ -1,0 +1,41 @@
+= Exercices sur la persistance et le pattern DAO
+
+== Sérialisation en Java
+Dans cette partie, la persistance sera assurée par la _sérialisation_ Java.
+
+. En examinant les méthodes de la classe `SerializationUtils`, décrivez le fonctionnement du test unitaire `EmployeeTest.unPersonnelEstSerializable`.
+Comment la classe `Employee` est-elle rendue sérialisable ?
++
+  Répondre ici
+
+. Sur le modèle de la question précédente, écrivez le test unitaire `TeamTest.uneEquipelEstSerializable` et rendez la classe `Team` sérialisable.
+. Définissez l'interface `DAO<T>` pour les opérations CRUD.
+. Implémentez cette interface pour la classe `Employee` avec la sérialisation Java.
+. (optionnelle) Faites de même pour la classe `Team`.
+. Implémentez une fabrique pour l'instanciation des DAO.
+
+== JDBC
+Dans cette partie, la persistance sera assurée par l'API JDBC.
+Vous reprendrez le travail sur la sérialisation et vous le compléterez.
+Vous pouvez utiliser le SGBD http://db.apache.org/derby/[derby] en mode embarqué.
+
+. Quelles directives ajouter au POM pour intègrer JDBC et le SGBD au projet ?
++
+  Répondre ici
+
+. Développez quelques tests pour vérifier le bon fonctionnent de JDBC.
+. Définissez le modèle relationnel permettant de stocker les données des instances du modèle objet
++
+  Répondre ici
+
+. Implémentez l'interface `DAO<T>` pour la classe `Employee` avec JDBC.
+. (optionnelle) Faites de même pour la classe `Team`.
+. Mettez en œuvre une fabrique abstraite pour la création des DAO.
+
+== ORM avec JPA (optionnelle)
+Dans cette partie, la persistance sera assurée par l'API JPA.
+Vous reprendrez le travail sur JDBC et vous le compléterez.
+En plus de http://db.apache.org/derby/[derby], vous utiliserez le _provider JPA_ http://hibernate.org/orm/[Hibernate ORM].
+
+. Proposez une nouvelle implémentation des DAO en utilisant JPA/Hibernate.
+. Intégrez cette implémentation dans la fabrique abstraite.
