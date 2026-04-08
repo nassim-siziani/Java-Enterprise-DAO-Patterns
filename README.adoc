@@ -7,7 +7,19 @@ Dans cette partie, la persistance sera assurée par la _sérialisation_ Java.
 . En examinant les méthodes de la classe `SerializationUtils`, décrivez le fonctionnement du test unitaire `EmployeeTest.unPersonnelEstSerializable`.
 Comment la classe `Employee` est-elle rendue sérialisable ?
 +
-  Répondre ici
+  La classe `SerializationUtils` fournit deux méthodes génériques :
+  
+  * `serialize(T obj)` : Convertit un objet sérialisable en tableau de bytes en utilisant `ObjectOutputStream`
+  * `deserialize(byte[] b, Class<T> cl)` : Reconvertit un tableau de bytes en objet du type original en utilisant `ObjectInputStream`
+  
+  Le test `unPersonnelEstSerializable` :
+  1. Crée un objet `Employee` (frodon)
+  2. Le sérialise en tableau de bytes avec `SerializationUtils.serialize(frodon)`
+  3. Le désérialise avec `SerializationUtils.deserialize(frodonAsByteArray, Employee.class)`
+  4. Vérifie que l'objet désérialisé est égal à l'original
+  
+  La classe `Employee` est rendue sérialisable en implémentant l'interface `Serializable`. Cette interface est un marqueur qui indique à la JVM que l'objet peut être sérialisé.
+
 
 . Sur le modèle de la question précédente, écrivez le test unitaire `TeamTest.uneEquipelEstSerializable` et rendez la classe `Team` sérialisable.
 . Définissez l'interface `DAO<T>` pour les opérations CRUD.
