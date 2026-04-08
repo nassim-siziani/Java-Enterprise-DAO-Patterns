@@ -3,6 +3,7 @@ package fr.uvsq.hal.pglp.patterns;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,13 @@ class TeamTest {
   public void containsFaitUneRechercheRecursive() {
     Team team1 = new Team();
     team1.add(frodon);
+    
     Team team2 = new Team();
     team2.add(gandalf);
+    
+    // Ligne ajoutée : il faut que team1 contienne team2 pour que la récursivité puisse trouver Gandalf !
+    team1.add(team2);
+    
     assertTrue(team1.contains(gandalf));
   }
 
@@ -105,5 +111,13 @@ class TeamTest {
       visitedEmployees.add(element);
     }
     assertEquals(expectedEmployees, visitedEmployees);
+  }
+
+  @Test
+  public void uneEquipeEstSerializable() throws IOException, ClassNotFoundException {
+    byte[] teamAsByteArray = SerializationUtils.serialize(communaute);
+    Team deserializedTeam = SerializationUtils.deserialize(teamAsByteArray, Team.class);
+    
+    assertEquals(communaute, deserializedTeam);
   }
 }

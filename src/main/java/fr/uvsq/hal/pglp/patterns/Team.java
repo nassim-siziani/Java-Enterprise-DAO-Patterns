@@ -1,8 +1,10 @@
 package fr.uvsq.hal.pglp.patterns;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -11,24 +13,66 @@ import java.util.Stack;
  * @author hal
  * @version 2022
  */
-public class Team implements OrganizationElement, Iterable<OrganizationElement> {
+public class Team implements OrganizationElement, Iterable<OrganizationElement>, Serializable {
   private List<OrganizationElement> members;
 
   public Team() {
     members = new ArrayList<>();
   }
 
+  /**
+   * Ajoute un élément à l'équipe.
+   * Empêche une équipe de s'ajouter elle-même directement.
+   */
   public void add(OrganizationElement element) {
-    members.add(element);
+    if (element != this) {
+      members.add(element);
+    }
   }
 
+  /**
+   * Vérifie si un élément est présent dans l'équipe ou ses sous-équipes.
+   */
   public boolean contains(OrganizationElement element) {
-    return members.contains(element);
+    // Règle stricte : un groupe ne se contient jamais lui-même
+    if (this.equals(element)) {
+      return false;
+    }
+
+    for (OrganizationElement member : members) {
+      // 1. Est-ce que l'élément recherché est directement là ?
+      if (member.equals(element)) {
+        return true;
+      }
+      // 2. Si c'est une sous-équipe, on fouille à l'intérieur (récursivité) !
+      if (member instanceof Team && ((Team) member).contains(element)) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   @Override
   public Iterator<OrganizationElement> iterator() {
     return new TeamIterator(members);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Team team = (Team) o;
+    return Objects.equals(members, team.members);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(members);
   }
 
   private static class TeamIterator implements Iterator<OrganizationElement> {
