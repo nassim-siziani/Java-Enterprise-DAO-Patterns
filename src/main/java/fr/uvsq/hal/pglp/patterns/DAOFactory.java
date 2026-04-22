@@ -7,11 +7,11 @@ package fr.uvsq.hal.pglp.patterns;
 public abstract class DAOFactory {
 
   // Enumération pour lister nos types de stockage disponibles
-  public enum DAOType {
+public enum DAOType {
     SERIALIZATION,
-    JDBC
-  }
-
+    JDBC,
+    JPA // <-- NOUVEAU
+}
   // Les méthodes abstraites que les sous-usines devront implémenter
   public abstract DAO<Employee> getEmployeeDAO();
   
@@ -25,8 +25,13 @@ public abstract class DAOFactory {
   public static DAOFactory getDAOFactory(DAOType type) {
     if (type == DAOType.JDBC) {
       return new DAOFactoryJDBC();
+    } else if (type == DAOType.JPA) {
+      return new DAOFactoryJPA(); // Retourne la nouvelle usine pour JPA
     }
-    // Par défaut, on retourne la sérialisation
     return new DAOFactorySerialize();
   }
 }
+
+
+
+  
