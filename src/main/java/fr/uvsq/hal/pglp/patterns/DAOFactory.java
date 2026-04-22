@@ -1,30 +1,32 @@
 package fr.uvsq.hal.pglp.patterns;
 
 /**
- * Fabrique pour l'instanciation des DAO.
- * Implémente le pattern Factory pour centraliser la création des objets d'accès aux données.
- *
- * @author hal
- * @version 2022
+ * Fabrique Abstraite pour l'instanciation des DAO.
+ * Elle permet de choisir la technologie de persistance (Fichier ou BDD).
  */
-public class DAOFactory {
+public abstract class DAOFactory {
+
+  // Enumération pour lister nos types de stockage disponibles
+  public enum DAOType {
+    SERIALIZATION,
+    JDBC
+  }
+
+  // Les méthodes abstraites que les sous-usines devront implémenter
+  public abstract DAO<Employee> getEmployeeDAO();
+  
+  // public abstract DAO<Team> getTeamDAO(); // A décommenter si tu fais la classe Team
 
   /**
-   * Récupère le DAO pour gérer la persistance des employés.
-   *
-   * @return une instance concrète de DAO pour Employee
+   * Le "Producteur" de fabrique : c'est lui qui choisit quelle usine instancier.
+   * * @param type Le type de persistance souhaité
+   * @return L'usine correspondante
    */
-  public static DAO<Employee> getEmployeeDAO() {
-    return new EmployeeDAO();
+  public static DAOFactory getDAOFactory(DAOType type) {
+    if (type == DAOType.JDBC) {
+      return new DAOFactoryJDBC();
+    }
+    // Par défaut, on retourne la sérialisation
+    return new DAOFactorySerialize();
   }
-
-  /* * Note : Si tu décides de faire la Question 6 (optionnelle) plus tard 
-   * en créant un fichier TeamDAO.java, il te suffira de décommenter la méthode ci-dessous !
-   */
-  
-  /*
-  public static DAO<Team> getTeamDAO() {
-    return new TeamDAO();
-  }
-  */
 }
