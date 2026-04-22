@@ -43,7 +43,24 @@ Vous pouvez utiliser le SGBD http://db.apache.org/derby/[derby] en mode embarqu�
 . Développez quelques tests pour vérifier le bon fonctionnent de JDBC.
 . Définissez le modèle relationnel permettant de stocker les données des instances du modèle objet
 +
-  Répondre ici
+  Pour stocker un `Employee`, nous avons besoin de plusieurs tables car il contient des collections (fonctions et numéros de téléphone). L'identifiant (clé primaire) sera la concaténation du prénom et du nom pour rester cohérent avec la version sérialisée.
+
+**Table EMPLOYEES** (Stocke les informations de base)
+* `id` : VARCHAR (Clé primaire, ex: "Frodon_Sacquet")
+* `firstname` : VARCHAR
+* `lastname` : VARCHAR
+* `birth_date` : DATE
+
+**Table FUNCTIONS** (Stocke la liste des fonctions)
+* `employee_id` : VARCHAR (Clé étrangère vers EMPLOYEES)
+* `function_name` : VARCHAR
+* Clé primaire composite : (`employee_id`, `function_name`)
+
+**Table PHONES** (Stocke la map des numéros de téléphone)
+* `employee_id` : VARCHAR (Clé étrangère vers EMPLOYEES)
+* `phone_type` : VARCHAR (ex: "PRO", "MOBILE")
+* `phone_number` : VARCHAR
+* Clé primaire composite : (`employee_id`, `phone_type`)
 
 . Implémentez l'interface `DAO<T>` pour la classe `Employee` avec JDBC.
 . (optionnelle) Faites de même pour la classe `Team`.
