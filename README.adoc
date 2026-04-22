@@ -34,7 +34,11 @@ Vous pouvez utiliser le SGBD http://db.apache.org/derby/[derby] en mode embarqu�
 
 . Quelles directives ajouter au POM pour intègrer JDBC et le SGBD au projet ?
 +
-  Répondre ici
+  <dependency>
+    <groupId>org.apache.derby</groupId>
+    <artifactId>derby</artifactId>
+    <version>10.15.2.0</version>
+  </dependency>
 
 . Développez quelques tests pour vérifier le bon fonctionnent de JDBC.
 . Définissez le modèle relationnel permettant de stocker les données des instances du modèle objet
