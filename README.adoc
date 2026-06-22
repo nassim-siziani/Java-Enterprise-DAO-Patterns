@@ -1,75 +1,56 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/yzUqjzig)
-= Exercices sur la persistance et le pattern DAO
+cat << 'EOF' > README.md
+# 🏢 Enterprise Java Persistence Architecture
 
-== Sérialisation en Java
-Dans cette partie, la persistance sera assurée par la _sérialisation_ Java.
+### **👥 Author:** Nassim SIZIANI
+### **🎓 Project Type:** Academic Project - Master 1 Computer Science (Paris-Saclay / UVSQ)
+### **📚 Module:** Persistence & Data Access Objects (DAO)
 
-. En examinant les méthodes de la classe `SerializationUtils`, décrivez le fonctionnement du test unitaire `EmployeeTest.unPersonnelEstSerializable`.
-Comment la classe `Employee` est-elle rendue sérialisable ?
-+
-  La classe `SerializationUtils` fournit deux méthodes génériques :
-  
-  * `serialize(T obj)` : Convertit un objet sérialisable en tableau de bytes en utilisant `ObjectOutputStream`
-  * `deserialize(byte[] b, Class<T> cl)` : Reconvertit un tableau de bytes en objet du type original en utilisant `ObjectInputStream`
-  
-  Le test `unPersonnelEstSerializable` :
-  1. Crée un objet `Employee` (frodon)
-  2. Le sérialise en tableau de bytes avec `SerializationUtils.serialize(frodon)`
-  3. Le désérialise avec `SerializationUtils.deserialize(frodonAsByteArray, Employee.class)`
-  4. Vérifie que l'objet désérialisé est égal à l'original
-  
-  La classe `Employee` est rendue sérialisable en implémentant l'interface `Serializable`. Cette interface est un marqueur qui indique à la JVM que l'objet peut être sérialisé.
+---
 
+## 🎯 Project Overview
 
-. Sur le modèle de la question précédente, écrivez le test unitaire `TeamTest.uneEquipelEstSerializable` et rendez la classe `Team` sérialisable.
-. Définissez l'interface `DAO<T>` pour les opérations CRUD.
-. Implémentez cette interface pour la classe `Employee` avec la sérialisation Java.
-. (optionnelle) Faites de même pour la classe `Team`.
-. Implémentez une fabrique pour l'instanciation des DAO.
+This project demonstrates the implementation of a robust, decoupled enterprise persistence layer in Java. It showcases how to isolate business logic from database infrastructure using advanced architectural design patterns. 
 
-== JDBC
-Dans cette partie, la persistance sera assurée par l'API JDBC.
-Vous reprendrez le travail sur la sérialisation et vous le compléterez.
-Vous pouvez utiliser le SGBD http://db.apache.org/derby/[derby] en mode embarqué.
+The application manages an organizational structure (Employees and Teams) and allows seamless switching between three entirely different persistence mechanisms (Binary Serialization, Raw SQL via JDBC, and ORM via JPA/Hibernate) without altering the core domain logic.
 
-. Quelles directives ajouter au POM pour intègrer JDBC et le SGBD au projet ?
-+
-  <dependency>
-    <groupId>org.apache.derby</groupId>
-    <artifactId>derby</artifactId>
-    <version>10.15.2.0</version>
-  </dependency>
+### **✨ Architectural Highlights & Patterns Used:**
+* **Data Access Object (DAO):** Standardized generic interfaces (`DAO<T>`) abstracting CRUD operations, utilizing `Optional` to handle null-safety natively.
+* **Abstract Factory Pattern:** Dynamic switching between persistence environments (`DAOFactorySerialize`, `DAOFactoryJDBC`, `DAOFactoryJPA`) using a central producer.
+* **Builder Pattern:** Clean, immutable instantiation of complex `Employee` entities containing dynamic maps and collections.
+* **Composite Pattern:** Hierarchical management of `Team` and `OrganizationElement` objects with recursive infinite-loop protection and custom iterators.
 
-. Développez quelques tests pour vérifier le bon fonctionnent de JDBC.
-. Définissez le modèle relationnel permettant de stocker les données des instances du modèle objet
-+
-  Pour stocker un `Employee`, nous avons besoin de plusieurs tables car il contient des collections (fonctions et numéros de téléphone). L'identifiant (clé primaire) sera la concaténation du prénom et du nom pour rester cohérent avec la version sérialisée.
+---
 
-**Table EMPLOYEES** (Stocke les informations de base)
-* `id` : VARCHAR (Clé primaire, ex: "Frodon_Sacquet")
-* `firstname` : VARCHAR
-* `lastname` : VARCHAR
-* `birth_date` : DATE
+## 💻 Technology Stack
 
-**Table FUNCTIONS** (Stocke la liste des fonctions)
-* `employee_id` : VARCHAR (Clé étrangère vers EMPLOYEES)
-* `function_name` : VARCHAR
-* Clé primaire composite : (`employee_id`, `function_name`)
+* **Language:** Java 17
+* **Database:** Apache Derby (Embedded Relational DBMS)
+* **ORM:** Jakarta Persistence API (JPA) / Hibernate
+* **Build Tool:** Maven
 
-**Table PHONES** (Stocke la map des numéros de téléphone)
-* `employee_id` : VARCHAR (Clé étrangère vers EMPLOYEES)
-* `phone_type` : VARCHAR (ex: "PRO", "MOBILE")
-* `phone_number` : VARCHAR
-* Clé primaire composite : (`employee_id`, `phone_type`)
+---
 
-. Implémentez l'interface `DAO<T>` pour la classe `Employee` avec JDBC.
-. (optionnelle) Faites de même pour la classe `Team`.
-. Mettez en œuvre une fabrique abstraite pour la création des DAO.
+## 📁 Persistence Implementations
 
-== ORM avec JPA (optionnelle)
-Dans cette partie, la persistance sera assurée par l'API JPA.
-Vous reprendrez le travail sur JDBC et vous le compléterez.
-En plus de http://db.apache.org/derby/[derby], vous utiliserez le _provider JPA_ http://hibernate.org/orm/[Hibernate ORM].
+### 1. Java Serialization Layer
+Stores objects as raw binary `.ser` files using standard `ObjectOutputStream`. Acts as the baseline persistent storage solution.
 
-. Proposez une nouvelle implémentation des DAO en utilisant JPA/Hibernate.
-. Intégrez cette implémentation dans la fabrique abstraite.
+### 2. JDBC Layer (Raw SQL)
+Communicates directly with the Apache Derby embedded database using raw SQL queries (`PreparedStatement`, `ResultSet`). Demonstrates low-level database connection management and manual object mapping.
+
+### 3. JPA / Hibernate Layer (ORM)
+The most advanced layer. Utilizes Java annotations (`@Entity`, `@Table`, `@ElementCollection`, `@MapKeyEnumerated`) to automatically map complex object graphs (including inner Lists and HashMaps) to relational database tables, handling cascading saves and retrievals transparently.
+
+---
+
+## 🔧 Getting Started
+
+### Prerequisites
+Ensure Java JDK 17 and Maven are installed.
+
+### Execution
+To run the tests and verify the persistence layers, execute the standard Maven build:
+```bash
+mvn clean test
+
+EOF
