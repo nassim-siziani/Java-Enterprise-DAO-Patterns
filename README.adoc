@@ -1,4 +1,3 @@
-cat << 'EOF' > README.md
 # 🏢 Enterprise Java Persistence Architecture
 
 ### **👥 Author:** Nassim SIZIANI
@@ -52,5 +51,3 @@ Ensure Java JDK 17 and Maven are installed.
 To run the tests and verify the persistence layers, execute the standard Maven build:
 ```bash
 mvn clean test
-
-EOF
